@@ -66,5 +66,10 @@ public class BenhNhan {
     public void setDiaChi(String DiaChi) {
         this.DiaChi = DiaChi;
     }
-    
+
+    // test
+    @Override
+    public String toString() {
+        return "BenhNhan{" + "id=" + id + ", ten=" + ten + ", tuoi=" + tuoi + ", SDT=" + SDT + ", DiaChi=" + DiaChi + '}';
+    }
 }

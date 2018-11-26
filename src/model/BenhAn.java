@@ -18,17 +18,19 @@ public class BenhAn {
     private List<ThuocDung> donThuoc;
     private String ketQua;
     private String khamLS;
+    private String trangThai;
 
     public BenhAn() {
     }
 
-    public BenhAn(int id, BenhNhan benhNhan, List<PhieuXetNghiem> dsPhieuXN, List<ThuocDung> donThuoc, String ketQua, String khamLS) {
+    public BenhAn(int id, BenhNhan benhNhan, List<PhieuXetNghiem> dsPhieuXN, List<ThuocDung> donThuoc, String ketQua, String khamLS, String trangThai) {
         this.id = id;
         this.benhNhan = benhNhan;
         this.dsPhieuXN = dsPhieuXN;
         this.donThuoc = donThuoc;
         this.ketQua = ketQua;
         this.khamLS = khamLS;
+        this.trangThai = trangThai;
     }
 
     public int getId() {
@@ -78,6 +80,19 @@ public class BenhAn {
     public void setKhamLS(String khamLS) {
         this.khamLS = khamLS;
     }
-    
+
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
+    }
+
+    // Test.
+    @Override
+    public String toString() {
+        return "BenhAn{" + "id=" + id + ", benhNhan=" + benhNhan + ", dsPhieuXN=" + dsPhieuXN + ", donThuoc=" + donThuoc + ", ketQua=" + ketQua + ", khamLS=" + khamLS + ", trangThai=" + trangThai + '}';
+    }
     
 }

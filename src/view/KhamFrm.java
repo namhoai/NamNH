@@ -5,6 +5,14 @@
  */
 package view;
 
+import controller.KhamController;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import model.BenhAn;
+import model.Buong;
+import model.PhieuXetNghiem;
+import model.ThuocDung;
+
 /**
  *
  * @author HoaiNam
@@ -14,10 +22,88 @@ public class KhamFrm extends javax.swing.JFrame {
     /**
      * Creates new form KhamFrm
      */
-    public KhamFrm() {
+    private BenhAn benhAn;
+    private List<PhieuXetNghiem> dsPhieuXN;
+    private List<ThuocDung> donThuoc;
+    private List<Buong> dsBuongXN;
+    
+    private DefaultTableModel modelPXN;
+    private DefaultTableModel modelDT;
+    
+    public KhamFrm(BenhAn ba) {
         initComponents();
+        this.benhAn = ba;
+        KhamController khamCtr = new KhamController();
+        // Xét các thông số ban đầu.
+        // Bệnh nhân.
+        lab_tenBN.setText(ba.getBenhNhan().getTen());
+        lab_tuoiBN.setText(ba.getBenhNhan().getTuoi() + "");
+        lab_diaChi.setText(ba.getBenhNhan().getDiaChi());
+        
+        // Bênh Án.
+        txt_khamLS.setText(ba.getKhamLS());
+        txt_ketQua.setText(ba.getKetQua());
+       
+        
+        // Lấy danh sách các phiếu xét nghiệm trong bệnh án.
+        dsPhieuXN = khamCtr.getDSPhieuXetNghiem(ba.getId());
+
+        if (dsPhieuXN != null) {
+            this.benhAn.setDsPhieuXN(dsPhieuXN);
+            // nếu có dữ liệu thì vẽ lên.
+            drawPXN(dsPhieuXN);
+        }
+
+
+        // Lấy đơn thuốc của bệnh án.
+        donThuoc = khamCtr.getDonThuoc(ba.getId());
+        
+        if (donThuoc != null) {
+            this.benhAn.setDonThuoc(donThuoc);
+            // nếu có dữ liệu thì vẽ lên.
+            drawDT(donThuoc);
+        }
+        
+    }
+    
+    private void drawDT(List<ThuocDung> donThuoc) {        
+        modelDT = (DefaultTableModel) tbl_donThuoc.getModel();
+
+        while (modelDT.getRowCount() > 0) {
+            modelDT.removeRow(0);
+        }
+        
+        int i = 1;
+        
+        for (ThuocDung thuocDung : donThuoc) {
+
+            modelDT.addRow(new Object[]{
+                i++,
+                thuocDung.getThuoc().getTen(),
+                thuocDung.getSoLuong(),
+                thuocDung.getCachSD(),
+            });
+        }
     }
 
+    private void drawPXN(List<PhieuXetNghiem> dsPhieuXN) {
+        modelPXN = (DefaultTableModel) tbl_phieuXN.getModel();
+        while (modelPXN.getRowCount() > 0) {
+            modelPXN.removeRow(0);
+        }
+        
+        int i = 1;
+        
+        for (PhieuXetNghiem phieuXN : dsPhieuXN) {
+            String trangThai = (phieuXN.getKetQua().length() > 0) ? "Đã có" : "Chưa có";
+            modelPXN.addRow(new Object[]{
+                i++,
+                phieuXN.getXetNghiem().getTen(),
+                trangThai,
+            });
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,20 +123,21 @@ public class KhamFrm extends javax.swing.JFrame {
         lab_diaChi = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txt_khamLS = new javax.swing.JTextArea();
+        txt_ketQua = new javax.swing.JTextArea();
         jLabel9 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tbl_phieuXN = new javax.swing.JTable();
-        btn_them = new javax.swing.JButton();
-        btn_xoa = new javax.swing.JButton();
-        cbb_xetNghiem = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tbl_thuoc = new javax.swing.JTable();
+        tbl_donThuoc = new javax.swing.JTable();
         btn_capNhap = new javax.swing.JButton();
         btn_DaKham = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txt_khamLS = new javax.swing.JTextArea();
+        jLabel11 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbl_phieuXN = new javax.swing.JTable();
+        btn_chiDinhXN = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Khám");
@@ -69,11 +156,47 @@ public class KhamFrm extends javax.swing.JFrame {
 
         jLabel8.setText("Khám lâm sàng");
 
-        txt_khamLS.setColumns(20);
-        txt_khamLS.setRows(5);
-        jScrollPane1.setViewportView(txt_khamLS);
+        txt_ketQua.setColumns(20);
+        txt_ketQua.setRows(5);
+        jScrollPane1.setViewportView(txt_ketQua);
 
         jLabel9.setText("Phiếu xét nghiệm");
+
+        jLabel10.setText("Thuốc ");
+
+        tbl_donThuoc.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "STT", "Tên thuốc", "Số lượng", "Cách dùng"
+            }
+        ));
+        jScrollPane3.setViewportView(tbl_donThuoc);
+        if (tbl_donThuoc.getColumnModel().getColumnCount() > 0) {
+            tbl_donThuoc.getColumnModel().getColumn(1).setResizable(false);
+            tbl_donThuoc.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        btn_capNhap.setText("Cập nhập");
+        btn_capNhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_capNhapActionPerformed(evt);
+            }
+        });
+
+        btn_DaKham.setText("Đã Khám");
+        btn_DaKham.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_DaKhamActionPerformed(evt);
+            }
+        });
+
+        txt_khamLS.setColumns(20);
+        txt_khamLS.setRows(5);
+        jScrollPane4.setViewportView(txt_khamLS);
+
+        jLabel11.setText("Kết quả");
 
         tbl_phieuXN.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -83,63 +206,48 @@ public class KhamFrm extends javax.swing.JFrame {
                 "STT", "Tên xét nghiệm", "Trạng thái"
             }
         ));
-        jScrollPane2.setViewportView(tbl_phieuXN);
-        if (tbl_phieuXN.getColumnModel().getColumnCount() > 0) {
-            tbl_phieuXN.getColumnModel().getColumn(1).setResizable(false);
-            tbl_phieuXN.getColumnModel().getColumn(2).setResizable(false);
-        }
-
-        btn_them.setText("Thêm");
-
-        btn_xoa.setText("Xóa");
-
-        cbb_xetNghiem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Xét nghiệm máu ", "Xét nghiệm nước tiểu ", "Chụp XQ", " " }));
-
-        jLabel10.setText("Thuốc ");
-
-        tbl_thuoc.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "STT", "Tên thuốc", "Số lượng", "Lượng dùng"
+        tbl_phieuXN.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_phieuXNMouseClicked(evt);
             }
-        ));
-        jScrollPane3.setViewportView(tbl_thuoc);
-        if (tbl_thuoc.getColumnModel().getColumnCount() > 0) {
-            tbl_thuoc.getColumnModel().getColumn(1).setResizable(false);
-            tbl_thuoc.getColumnModel().getColumn(2).setResizable(false);
-        }
+        });
+        jScrollPane2.setViewportView(tbl_phieuXN);
 
-        btn_capNhap.setText("Cập nhập");
-
-        btn_DaKham.setText("Đã Khám");
+        btn_chiDinhXN.setText("Chỉ định xét nghiệm");
+        btn_chiDinhXN.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_chiDinhXNMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_chiDinhXN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addComponent(cbb_xetNghiem, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btn_xoa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jLabel10)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btn_capNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(175, 175, 175)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(70, 70, 70)
@@ -153,11 +261,12 @@ public class KhamFrm extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lab_diaChi)
                                             .addComponent(lab_tuoiBN)
-                                            .addComponent(lab_tenBN))))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(194, 194, 194)
-                        .addComponent(btn_DaKham, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(lab_tenBN))))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(201, 201, 201)
+                .addComponent(btn_DaKham, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -178,43 +287,80 @@ public class KhamFrm extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(lab_diaChi))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel11))
+                .addGap(13, 13, 13)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_xoa, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbb_xetNghiem, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
+                    .addComponent(btn_chiDinhXN, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_capNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addComponent(btn_DaKham, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                .addComponent(btn_DaKham, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tbl_phieuXNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_phieuXNMouseClicked
+        int selectedPXN = tbl_phieuXN.getSelectedRow();
+
+        PhieuXetNghiem pxn = dsPhieuXN.get(selectedPXN);
+        KetQuaXetNghiemFrm phieuXetNghiem = new KetQuaXetNghiemFrm(pxn, benhAn.getBenhNhan());
+        phieuXetNghiem.setVisible(true);
+    }//GEN-LAST:event_tbl_phieuXNMouseClicked
+
+    private void btn_chiDinhXNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_chiDinhXNMouseClicked
+        // TODO add your handling code here:
+        ChiDinhXetNghiemFrm phieuXetNghiemFrm = new ChiDinhXetNghiemFrm(benhAn);
+        phieuXetNghiemFrm.setVisible(true);
+    }//GEN-LAST:event_btn_chiDinhXNMouseClicked
+
+    private void btn_capNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capNhapActionPerformed
+        // TODO add your handling code here:
+        DonThuocFrm donThuocFrm = new DonThuocFrm(benhAn);
+        donThuocFrm.setVisible(true);
+    }//GEN-LAST:event_btn_capNhapActionPerformed
+
+    private void btn_DaKhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_DaKhamActionPerformed
+        // TODO add your handling code here:
+        // Cập nhập trạng thái khám.
+        benhAn.setTrangThai("Da Kham");
+        benhAn.setKhamLS(txt_khamLS.getText());
+        benhAn.setKetQua(txt_ketQua.getText());
+        KhamController khamController = new KhamController();
+        khamController.updateBenhAn(benhAn);
+        //  đóng Frame
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_DaKhamActionPerformed
 
     /**
      * @param args the command line arguments
@@ -246,7 +392,7 @@ public class KhamFrm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new KhamFrm().setVisible(true);
+                new KhamFrm(null).setVisible(true);
             }
         });
     }
@@ -254,11 +400,10 @@ public class KhamFrm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_DaKham;
     private javax.swing.JButton btn_capNhap;
-    private javax.swing.JButton btn_them;
-    private javax.swing.JButton btn_xoa;
-    private javax.swing.JComboBox<String> cbb_xetNghiem;
+    private javax.swing.JButton btn_chiDinhXN;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -268,11 +413,14 @@ public class KhamFrm extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lab_diaChi;
     private javax.swing.JLabel lab_tenBN;
     private javax.swing.JLabel lab_tuoiBN;
+    private javax.swing.JTable tbl_donThuoc;
     private javax.swing.JTable tbl_phieuXN;
-    private javax.swing.JTable tbl_thuoc;
+    private javax.swing.JTextArea txt_ketQua;
     private javax.swing.JTextArea txt_khamLS;
     // End of variables declaration//GEN-END:variables
+
 }

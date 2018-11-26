@@ -10,6 +10,7 @@ package model;
  * @author HoaiNam
  */
 public class PhieuXetNghiem {
+
     private int id;
     private Buong buong;
     private XetNghiem xetNghiem;
@@ -57,4 +58,5 @@ public class PhieuXetNghiem {
         this.ketQua = ketQua;
     }
 
+    
 }
