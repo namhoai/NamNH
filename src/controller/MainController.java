@@ -20,10 +20,9 @@ public class MainController {
     public List<BenhAn> getDSBenhAnCho(int buongKhamId) {
         List<BenhAn> dsBA = new ArrayList<>();
         BenhAnDao benhAnDao = new BenhAnDao();
+        dsBA = benhAnDao.getDSBenhAn(buongKhamId);
 
         BenhNhanDao benhNhanDao = new BenhNhanDao();
-
-        dsBA = benhAnDao.getDSBenhAn(buongKhamId);
         for (BenhAn ba : dsBA) {
             BenhNhan bn = benhNhanDao.getBenhNhanByBenhAn(ba.getId());
             ba.setBenhNhan(bn);

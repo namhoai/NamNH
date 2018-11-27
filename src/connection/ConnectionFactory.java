@@ -30,12 +30,6 @@ public class ConnectionFactory {
     return conn;
   }
 
-  /**
-   * Get Instance this. Singleton Design pattern.
-   * 
-   * @return instance.
-   * @throws ClassNotFoundException
-   */
   public static ConnectionFactory getInstance() throws ClassNotFoundException {
     if (connectionFactory == null) {
       connectionFactory = new ConnectionFactory();

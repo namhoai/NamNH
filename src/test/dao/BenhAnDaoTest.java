@@ -51,6 +51,7 @@ public class BenhAnDaoTest {
     benhAn.setKhamLS("Binh Thuong");
     benhAn.setKetQua("Tot");
     benhAn.setTrangThai("Cho Kham");
+
     assertTrue(benhAnDao.updateBenhAn(benhAn));
   }
   
@@ -61,6 +62,7 @@ public class BenhAnDaoTest {
     benhAn.setKhamLS("Binh Thuong");
     benhAn.setKetQua("Tot");
     benhAn.setTrangThai("Cho Kham");
+
     assertFalse(benhAnDao.updateBenhAn(benhAn));
   }
   

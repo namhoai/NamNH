@@ -13,7 +13,7 @@ public class Buong {
     private int id;
     private String ten;
     private String viTri;
-    private String loai;
+    private String loai; // có 2 loại |Phong Kham| Xet Nghiem
 
     public Buong() {
     }

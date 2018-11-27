@@ -36,8 +36,6 @@ public class ChiDinhXetNghiemFrm extends javax.swing.JFrame {
         initComponents();
 
         this.benhAn = benhAn;
-        
-        if (benhAn == null) return;
 
         dsPXN = benhAn.getDsPhieuXN();
 
@@ -186,7 +184,6 @@ public class ChiDinhXetNghiemFrm extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1)
                         .addGap(129, 129, 129))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -216,9 +213,9 @@ public class ChiDinhXetNghiemFrm extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_xoa, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbb_xetNghiem, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbb_xetNghiem, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -246,6 +243,10 @@ public class ChiDinhXetNghiemFrm extends javax.swing.JFrame {
         Buong buongXN = dsBuong.get(rand.nextInt(dsBuong.size()));
         XetNghiem xetNghiem = dsXN.get(selectedXN);
         
+        // check trong dsPXN đã tồn tại xét nghiệm ở trên chưa.
+
+        if (!check(xetNghiem)) return;
+
         PhieuXetNghiem phieuXN = new PhieuXetNghiem(0, buongXN, xetNghiem, "");
         
         // Cập nhập vào csdl.
@@ -257,6 +258,14 @@ public class ChiDinhXetNghiemFrm extends javax.swing.JFrame {
         drawPXN(dsPXN);
     }//GEN-LAST:event_btn_themActionPerformed
 
+    public boolean check(XetNghiem xetNghiem) {
+        for (PhieuXetNghiem pxn: dsPXN) {
+            if (pxn.getXetNghiem().getId() == xetNghiem.getId()) {
+                return false;
+            }
+        }
+        return true;
+    };
     private void btn_xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_xoaActionPerformed
         // TODO add your handling code here:
         if (selectPXN == -1) {

@@ -11,6 +11,7 @@ import java.util.List;
 
 import model.BenhAn;
 import model.BenhNhan;
+import model.Buong;
 
 public class BenhAnDao {
 
@@ -25,6 +26,7 @@ public class BenhAnDao {
 			ps.setString(2, benhAn.getKhamLS());
 			ps.setString(3, benhAn.getTrangThai());
 			ps.setInt(4, benhAn.getId());
+                        // số lượng hàng được cập nhập.
 			int rowCount = ps.executeUpdate();
 			if (rowCount == 0)
 				return false;
@@ -54,6 +56,7 @@ public class BenhAnDao {
 		return null;
 	}
 
+        // lấy danh sách các bệnh án đang chờ trong buồng khám "buongKhamID".
 	public List<BenhAn> getDSBenhAn(int buongKhamID) {
 		try {
 			connection = ConnectionFactory.getInstance().getConnection();
@@ -77,6 +80,7 @@ public class BenhAnDao {
 	private BenhAn extractTFromResultSet(ResultSet rs) throws SQLException {
 		BenhAn benhan = new BenhAn();
 		benhan.setBenhNhan(new BenhNhan());
+                benhan.setBuongKham(new Buong());
 		benhan.setDonThuoc(new ArrayList<>());
 		benhan.setDsPhieuXN(new ArrayList<>());
 		benhan.setId(rs.getInt("ID"));

@@ -14,6 +14,7 @@ public class BenhNhanDao {
 
     Connection connection;
 
+    // Lấy Thông tin bệnh nhân theo bệnh án "benhAnID"
     public BenhNhan getBenhNhanByBenhAn(int benhAnID) {
         try {
             connection = ConnectionFactory.getInstance().getConnection();

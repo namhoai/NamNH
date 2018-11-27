@@ -21,13 +21,14 @@ public class MainFrm extends javax.swing.JFrame {
     /**
      * Creates new form MainFrm
      */
-    List<BenhAn> dsBA;
+    private Buong buongKham;
+    private List<BenhAn> dsBA;
     private DefaultTableModel modelBN;
 
     public MainFrm() {
         initComponents();
         // MainFrm của phòng khám có ID = 1.
-        Buong buongKham = new Buong(1, "Phong Kham 01", "201-A1", "Phong Kham");
+        buongKham = new Buong(1, "Phong Kham 01", "201-A1", "Phong Kham");
         dsBA = new ArrayList<>();
         modelBN = (DefaultTableModel) tbl_DSBA.getModel();
 
@@ -41,6 +42,7 @@ public class MainFrm extends javax.swing.JFrame {
     }
 
     private void drawBA(List<BenhAn> dsBA) {
+        // Xóa các row.
         while (modelBN.getRowCount() > 0) {
             modelBN.removeRow(0);
         }
@@ -70,6 +72,7 @@ public class MainFrm extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_DSBA = new javax.swing.JTable();
+        btn_capNhap = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -96,6 +99,13 @@ public class MainFrm extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tbl_DSBA);
 
+        btn_capNhap.setText("Cập nhập");
+        btn_capNhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_capNhapActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,16 +113,21 @@ public class MainFrm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 627, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(lab_tenBuong)
                 .addGap(198, 198, 198))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(258, 258, 258)
+                        .addComponent(btn_capNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,7 +139,10 @@ public class MainFrm extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_capNhap, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -137,6 +155,13 @@ public class MainFrm extends javax.swing.JFrame {
         KhamFrm kham = new KhamFrm(ba);
         kham.setVisible(true);
     }//GEN-LAST:event_tbl_DSBAMouseClicked
+
+    private void btn_capNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_capNhapActionPerformed
+        // TODO add your handling code here:
+        MainController mainCtr = new MainController();
+        dsBA = mainCtr.getDSBenhAnCho(buongKham.getId());
+        drawBA(dsBA);
+    }//GEN-LAST:event_btn_capNhapActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,6 +200,7 @@ public class MainFrm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_capNhap;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;

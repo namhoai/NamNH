@@ -33,15 +33,6 @@ public class ThuocDungDao {
         return null;
     }
 
-    private ThuocDung extractTFromResultSet(ResultSet rs) throws SQLException {
-        ThuocDung thuocDung = new ThuocDung();
-        thuocDung.setCachSD(rs.getString("CachSD"));
-        thuocDung.setChiPhi(rs.getFloat("ChiPhi"));
-        thuocDung.setId(rs.getInt("ID"));
-        thuocDung.setSoLuong(rs.getInt("SoLuong"));
-        return thuocDung;
-    }
-
     public boolean addThuocDung(ThuocDung thuocDung, int benhAnID) {
         try {
             connection = ConnectionFactory.getInstance().getConnection();
@@ -75,4 +66,14 @@ public class ThuocDungDao {
         }
         return false;
     }
+
+    private ThuocDung extractTFromResultSet(ResultSet rs) throws SQLException {
+        ThuocDung thuocDung = new ThuocDung();
+        thuocDung.setCachSD(rs.getString("CachSD"));
+        thuocDung.setChiPhi(rs.getFloat("ChiPhi"));
+        thuocDung.setId(rs.getInt("ID"));
+        thuocDung.setSoLuong(rs.getInt("SoLuong"));
+        return thuocDung;
+    }
+
 }

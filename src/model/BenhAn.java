@@ -14,6 +14,7 @@ import java.util.List;
 public class BenhAn {
     private int id;
     private BenhNhan benhNhan;
+    private Buong buongKham;
     private List<PhieuXetNghiem> dsPhieuXN;
     private List<ThuocDung> donThuoc;
     private String ketQua;
@@ -23,9 +24,10 @@ public class BenhAn {
     public BenhAn() {
     }
 
-    public BenhAn(int id, BenhNhan benhNhan, List<PhieuXetNghiem> dsPhieuXN, List<ThuocDung> donThuoc, String ketQua, String khamLS, String trangThai) {
+    public BenhAn(int id, BenhNhan benhNhan, Buong buongKham, List<PhieuXetNghiem> dsPhieuXN, List<ThuocDung> donThuoc, String ketQua, String khamLS, String trangThai) {
         this.id = id;
         this.benhNhan = benhNhan;
+        this.buongKham = buongKham;
         this.dsPhieuXN = dsPhieuXN;
         this.donThuoc = donThuoc;
         this.ketQua = ketQua;
@@ -47,6 +49,14 @@ public class BenhAn {
 
     public void setBenhNhan(BenhNhan benhNhan) {
         this.benhNhan = benhNhan;
+    }
+
+    public Buong getBuongKham() {
+        return buongKham;
+    }
+
+    public void setBuongKham(Buong buongKham) {
+        this.buongKham = buongKham;
     }
 
     public List<PhieuXetNghiem> getDsPhieuXN() {
@@ -89,10 +99,5 @@ public class BenhAn {
         this.trangThai = trangThai;
     }
 
-    // Test.
-    @Override
-    public String toString() {
-        return "BenhAn{" + "id=" + id + ", benhNhan=" + benhNhan + ", dsPhieuXN=" + dsPhieuXN + ", donThuoc=" + donThuoc + ", ketQua=" + ketQua + ", khamLS=" + khamLS + ", trangThai=" + trangThai + '}';
-    }
     
 }

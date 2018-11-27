@@ -41,7 +41,7 @@ public class ThuocDungDaoTest {
   @Test
   public void testGetDSThuocDungFail() {
     List<ThuocDung> dsThuoc = thuocDungDao.getDSThuoc(999);
-    assertEquals(dsThuoc.size(),0);
+    assertEquals(dsThuoc.size(), 0);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class ThuocDungDaoTest {
 
   @Test
   public void testDeleteThuocDungSuccess() {
-    assertTrue(thuocDungDao.deleteThuocDung(10));
+    assertTrue(thuocDungDao.deleteThuocDung(14));
   }
 
   @Test
